@@ -13,14 +13,6 @@
  * operators. Written purposely with almost zero effort for 
  * documentation/legibility. Comments/criticism/questions are welcome.
  *
- * Edit (2016/02/11): fixed an output bug that would display bogus extra 
- * numbers from previous attempts if a solution did not use all 6 numbers 
- * (array printing issue). Fixed version e.g.
- *
- *   > ./countdown
- *   4 1 2 8 75 25 makes 527
- *   8 - 1 * 75 + 2
- *   = 527
  */
 
 #include <stdio.h>
@@ -29,6 +21,7 @@
 #define MAX_NUMS 6
 
 int is_num_idle(int a, int *b, int len);
+int count_nums(int a, int *b, int len);
 
 int main() {
   srand(time(0));
@@ -51,8 +44,11 @@ int main() {
   while (current != target)
   {
     if (u < MAX_NUMS) {
-      while (is_num_idle(numbers[r = rand() % MAX_NUMS], used, u) == 0) {}
-      z = numbers[r];
+      while (1) {
+        z = numbers[rand() % MAX_NUMS];
+        if (count_nums(z, used, u) < count_nums(z, numbers, MAX_NUMS))
+          break;
+      }
       used[u++] = z;
       if (current == 0)
         current = z;
@@ -70,6 +66,10 @@ int main() {
             break;
         }
         ups[o++] = r;
+        if (o > 0 && z == 1 && (ops[ups[o-1]] == '*' || ops[ups[o-1]] == '/')) {
+          o--;
+          u--;
+        }
       }
     }
     else if (u >= MAX_NUMS)
@@ -89,6 +89,15 @@ int main() {
 int is_num_idle(int a, int *b, int len) {
   int i;
   for (i = 0; i < len; i++)
-    if (a == b[i]) return 0;
+    if (a == b[i]) 
+      return 0;
   return 1;
+}
+
+int count_nums(int a, int *b, int len) {
+  int i, count = 0;
+  for (i = 0; i < len ; i++)
+    if (a == b[i]) 
+      count++;
+  return count;
 }
