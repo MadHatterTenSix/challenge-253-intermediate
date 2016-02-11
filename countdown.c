@@ -13,6 +13,14 @@
  * operators. Written purposely with almost zero effort for 
  * documentation/legibility. Comments/criticism/questions are welcome.
  *
+ * Edit (2016/02/11): fixed an output bug that would display bogus extra 
+ * numbers from previous attempts if a solution did not use all 6 numbers 
+ * (array printing issue). Fixed version e.g.
+ *
+ *   > ./countdown
+ *   4 1 2 8 75 25 makes 527
+ *   8 - 1 * 75 + 2
+ *   = 527
  */
 
 #include <stdio.h>
@@ -29,15 +37,16 @@ int main() {
   char ops[] = "+-*/";
   int ups[MAX_NUMS];
   char buffer[BUF_LEN];
-  
+
   for (i = 0; i < MAX_NUMS; i++) {
     scanf("%d", &numbers[i]);
     used[i] = -1;
   }
   scanf("%s", buffer);
   scanf("%d", &target);
-  
-  while (current != target) {
+
+  while (current != target)
+  {
     if (u < MAX_NUMS) {
       while (is_num_idle(numbers[r = rand() % MAX_NUMS], used, u) == 0) {}
       used[u] = numbers[r];
@@ -64,15 +73,12 @@ int main() {
     if (current < 0)
       current = u = o = 0;
   }
-  /*printf("((((%d %c %d) %c %d) %c %d) %c %d) %c %d \n= %d\n",*/
-  printf("%d %c %d %c %d %c %d %c %d %c %d \n= %d\n",
-    used[0], ops[ups[0]],
-    used[1], ops[ups[1]],
-    used[2], ops[ups[2]],
-    used[3], ops[ups[3]],
-    used[4], ops[ups[4]],
-    used[5], current
-  );
+  
+  for (i = 0; i < u-1; i++){
+    printf("%d %c ", used[i], ops[ups[i]]);
+  }
+  printf("%d\n= %d\n", used[i], target);
+
   return 0;
 }
 
