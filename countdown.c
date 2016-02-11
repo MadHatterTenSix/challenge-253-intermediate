@@ -32,7 +32,7 @@ int is_num_idle(int a, int *b, int len);
 
 int main() {
   srand(time(0));
-  int i, u = 0, r, o = 0, target, previous, current = 0;
+  int i, z, u = 0, r, o = 0, target, current = 0;
   int numbers[MAX_NUMS], used[MAX_NUMS];
   char ops[] = "+-*/";
   int ups[MAX_NUMS];
@@ -40,44 +40,48 @@ int main() {
 
   for (i = 0; i < MAX_NUMS; i++) {
     scanf("%d", &numbers[i]);
-    used[i] = -1;
+    
   }
   scanf("%s", buffer);
   scanf("%d", &target);
+  for (i = 0; i < MAX_NUMS; i++) {
+    used[i] = 0;
+  }
 
   while (current != target)
   {
     if (u < MAX_NUMS) {
       while (is_num_idle(numbers[r = rand() % MAX_NUMS], used, u) == 0) {}
-      used[u] = numbers[r];
+      z = numbers[r];
+      used[u++] = z;
       if (current == 0)
-        current = used[u];
+        current = z;
       else {    
         switch (ops[r = rand() % 4]) {
-          case '+': current += used[u]; break;
-          case '-': current -= used[u]; break;
-          case '*': current *= used[u]; break;
+          case '+': current += z; break;
+          case '-': current -= z; break;
+          case '*': current *= z; break;
           case '/': 
-            previous = current;
-            current /= used[u];
-            if (current * used[u] != previous)
+            if (z < current 
+                && (current % z) == 0)
+              current /= z;
+            else
               current = u = o = 0;
             break;
         }
         ups[o++] = r;
       }
-      u++;
     }
     else if (u >= MAX_NUMS)
       current = u = o = 0;
-    if (current < 0)
+    if (current <= 0)
       current = u = o = 0;
   }
   
   for (i = 0; i < u-1; i++){
     printf("%d %c ", used[i], ops[ups[i]]);
   }
-  printf("%d\n= %d\n", used[i], target);
+  printf("%d\n= %d\n", used[i], current);
 
   return 0;
 }
