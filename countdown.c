@@ -20,7 +20,6 @@
 #define BUF_LEN 1024
 #define MAX_NUMS 6
 
-int is_num_idle(int a, int *b, int len);
 int count_nums(int a, int *b, int len);
 
 int main() {
@@ -84,14 +83,6 @@ int main() {
   printf("%d\n= %d\n", used[i], current);
 
   return 0;
-}
-
-int is_num_idle(int a, int *b, int len) {
-  int i;
-  for (i = 0; i < len; i++)
-    if (a == b[i]) 
-      return 0;
-  return 1;
 }
 
 int count_nums(int a, int *b, int len) {
